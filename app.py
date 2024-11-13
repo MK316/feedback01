@@ -3,7 +3,7 @@ from gtts import gTTS
 import random
 import os
 
-# List of feedback for correct and incorrect answers
+# Feedback datasets
 feedback_correct = [
     "Excellent work! You've got it.",
     "Correct! Nicely done.",
@@ -49,7 +49,6 @@ feedback_incorrect = [
     "Good effort, but let's explore this from another perspective.",
     "Not there yet, but let's figure it out together."
 ]
-
 
 def play_audio(feedback):
     """Convert text to speech and play audio."""
