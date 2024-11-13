@@ -74,13 +74,15 @@ def provide_feedback(feedback_list):
 st.title("Feedback Audio Player")
 st.write("Choose a situation to get feedback:")
 
-if st.button("When the answer is correct"):
-    st.session_state.current_category = 'correct'
-    provide_feedback(feedback_correct)
-
-if st.button("When the answer is incorrect"):
-    st.session_state.current_category = 'incorrect'
-    provide_feedback(feedback_incorrect)
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("When the answer is correct"):
+        st.session_state.current_category = 'correct'
+        provide_feedback(feedback_correct)
+with col2:
+    if st.button("When the answer is incorrect"):
+        st.session_state.current_category = 'incorrect'
+        provide_feedback(feedback_incorrect)
 
 if 'current_category' in st.session_state and st.button("Next"):
     if st.session_state.current_category == 'correct':
