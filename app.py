@@ -3,6 +3,7 @@ from gtts import gTTS
 import random
 import os
 
+# Feedback datasets
 feedback_correct = [
     "Well done! You’ve grasped this concept nicely.",
     "Correct! You're on the right track.",
@@ -49,7 +50,6 @@ feedback_incorrect = [
     "Not there yet, but let's figure it out together."
 ]
 
-
 def play_audio(feedback):
     """Convert text to speech and play audio."""
     tts = gTTS(feedback, lang='en')
@@ -57,7 +57,7 @@ def play_audio(feedback):
     st.audio('feedback.mp3', format='audio/mp3', start_time=0)
     os.remove('feedback.mp3')  # Clean up the audio file after playing
 
-def provide_feedback(feedback_list, session_key):
+def provide_feedback(feedback_list, session_key, placeholder):
     """Display and handle feedback operations for a specific list."""
     if session_key not in st.session_state or not st.session_state[session_key]:
         st.session_state[session_key] = feedback_list[:]
@@ -65,29 +65,29 @@ def provide_feedback(feedback_list, session_key):
     
     if st.session_state[session_key]:
         current_feedback = st.session_state[session_key].pop()
-        st.write(current_feedback)
+        placeholder.text(current_feedback)  # Update the placeholder text with feedback
         play_audio(current_feedback)
     else:
-        st.success("You've gone through all feedback in this category. Start over or switch categories.")
+        placeholder.success("You've gone through all feedback in this category. Start over or switch categories.")
 
 # UI setup
 st.title("Feedback Audio Player")
 st.write("Choose a situation to get feedback:")
 
 col1, col2 = st.columns(2)
+placeholder1 = col1.empty()  # Placeholder for correct feedback
+placeholder2 = col2.empty()  # Placeholder for incorrect feedback
 
 with col1:
     if st.button("When the answer is correct"):
-        provide_feedback(feedback_correct, 'remaining_correct')
+        provide_feedback(feedback_correct, 'remaining_correct', placeholder1)
     if 'remaining_correct' in st.session_state:
-        st.write("Feedback for correct answers:")
         if st.button("Next Correct"):
-            provide_feedback(feedback_correct, 'remaining_correct')
+            provide_feedback(feedback_correct, 'remaining_correct', placeholder1)
 
 with col2:
     if st.button("When the answer is incorrect"):
-        provide_feedback(feedback_incorrect, 'remaining_incorrect')
+        provide_feedback(feedback_incorrect, 'remaining_incorrect', placeholder2)
     if 'remaining_incorrect' in st.session_state:
-        st.write("Feedback for incorrect answers:")
         if st.button("Next Incorrect"):
-            provide_feedback(feedback_incorrect, 'remaining_incorrect')
+            provide_feedback(feedback_incorrect, 'remaining_incorrect', placeholder2)
