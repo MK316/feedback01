@@ -3,7 +3,6 @@ from gtts import gTTS
 import random
 import os
 
-# Feedback datasets
 feedback_correct = [
     "Well done! You’ve grasped this concept nicely.",
     "Correct! You're on the right track.",
@@ -81,6 +80,7 @@ with col1:
     if st.button("When the answer is correct"):
         provide_feedback(feedback_correct, 'remaining_correct')
     if 'remaining_correct' in st.session_state:
+        st.write("Feedback for correct answers:")
         if st.button("Next Correct"):
             provide_feedback(feedback_correct, 'remaining_correct')
 
@@ -88,5 +88,6 @@ with col2:
     if st.button("When the answer is incorrect"):
         provide_feedback(feedback_incorrect, 'remaining_incorrect')
     if 'remaining_incorrect' in st.session_state:
+        st.write("Feedback for incorrect answers:")
         if st.button("Next Incorrect"):
             provide_feedback(feedback_incorrect, 'remaining_incorrect')
