@@ -57,18 +57,18 @@ def play_audio(feedback):
     st.audio('feedback.mp3', format='audio/mp3', start_time=0)
     os.remove('feedback.mp3')  # Clean up the audio file after playing
 
-def provide_feedback(feedback_list):
-    """Display and handle feedback operations."""
-    if 'remaining_feedback' not in st.session_state or not st.session_state.remaining_feedback:
-        st.session_state.remaining_feedback = feedback_list[:]
-        random.shuffle(st.session_state.remaining_feedback)
+def provide_feedback(feedback_list, session_key):
+    """Display and handle feedback operations for a specific list."""
+    if session_key not in st.session_state or not st.session_state[session_key]:
+        st.session_state[session_key] = feedback_list[:]
+        random.shuffle(st.session_state[session_key])
     
-    if st.session_state.remaining_feedback:
-        current_feedback = st.session_state.remaining_feedback.pop()
+    if st.session_state[session_key]:
+        current_feedback = st.session_state[session_key].pop()
         st.write(current_feedback)
         play_audio(current_feedback)
     else:
-        st.success("You've gone through all feedback. Start over or switch categories.")
+        st.success("You've gone through all feedback in this category. Start over or switch categories.")
 
 # UI setup
 st.title("Feedback Audio Player")
@@ -77,17 +77,15 @@ st.write("Choose a situation to get feedback:")
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("When the answer is correct", key="correct"):
-        st.session_state.current_category = 'correct'
-        provide_feedback(feedback_correct)
-    if 'current_category' in st.session_state and st.session_state.current_category == 'correct':
-        if st.button("Next Correct", key="next_correct"):
-            provide_feedback(feedback_correct)
+    if st.button("When the answer is correct"):
+        provide_feedback(feedback_correct, 'remaining_correct')
+    if 'remaining_correct' in st.session_state:
+        if st.button("Next Correct"):
+            provide_feedback(feedback_correct, 'remaining_correct')
 
 with col2:
-    if st.button("When the answer is incorrect", key="incorrect"):
-        st.session_state.current_category = 'incorrect'
-        provide_feedback(feedback_incorrect)
-    if 'current_category' in st.session_state and st.session_state.current_category == 'incorrect':
-        if st.button("Next Incorrect", key="next_incorrect"):
-            provide_feedback(feedback_incorrect)
+    if st.button("When the answer is incorrect"):
+        provide_feedback(feedback_incorrect, 'remaining_incorrect')
+    if 'remaining_incorrect' in st.session_state:
+        if st.button("Next Incorrect"):
+            provide_feedback(feedback_incorrect, 'remaining_incorrect')
