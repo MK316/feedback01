@@ -81,14 +81,14 @@ st.title("Feedback Audio Player")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Correct Feedback")
+    st.subheader("😍 Correct Feedback")
     text_placeholder1 = st.empty()  # Placeholder for correct feedback text
     audio_placeholder1 = st.empty()  # Placeholder for correct feedback audio
     if st.button("Next Correct Feedback"):
         provide_feedback(feedback_correct, 'remaining_correct', text_placeholder1, audio_placeholder1)
 
 with col2:
-    st.subheader("Incorrect Feedback")
+    st.subheader("😅Incorrect Feedback")
     text_placeholder2 = st.empty()  # Placeholder for incorrect feedback text
     audio_placeholder2 = st.empty()  # Placeholder for incorrect feedback audio
     if st.button("Next Incorrect Feedback"):
