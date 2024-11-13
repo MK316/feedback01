@@ -50,14 +50,15 @@ feedback_incorrect = [
     "Not there yet, but let's figure it out together."
 ]
 
-def play_audio(feedback):
+
+def play_audio(feedback, audio_placeholder):
     """Convert text to speech and play audio."""
     tts = gTTS(feedback, lang='en')
     tts.save('feedback.mp3')
-    st.audio('feedback.mp3', format='audio/mp3', start_time=0)
+    audio_placeholder.audio('feedback.mp3', format='audio/mp3', start_time=0)
     os.remove('feedback.mp3')  # Clean up the audio file after playing
 
-def provide_feedback(feedback_list, session_key, placeholder):
+def provide_feedback(feedback_list, session_key, text_placeholder, audio_placeholder):
     """Display and handle feedback operations for a specific list."""
     if session_key not in st.session_state or not st.session_state[session_key]:
         st.session_state[session_key] = feedback_list[:]
@@ -65,29 +66,33 @@ def provide_feedback(feedback_list, session_key, placeholder):
     
     if st.session_state[session_key]:
         current_feedback = st.session_state[session_key].pop()
-        placeholder.text(current_feedback)  # Update the placeholder text with feedback
-        play_audio(current_feedback)
+        text_placeholder.text(current_feedback)  # Update the placeholder text with feedback
+        play_audio(current_feedback, audio_placeholder)
     else:
-        placeholder.success("You've gone through all feedback in this category. Start over or switch categories.")
+        text_placeholder.success("You've gone through all feedback in this category. Start over or switch categories.")
+        audio_placeholder.empty()  # Clear the audio placeholder
 
 # UI setup
 st.title("Feedback Audio Player")
 st.write("Choose a situation to get feedback:")
 
+# Define placeholders to fix positions of text, audio, and button for each column
 col1, col2 = st.columns(2)
-placeholder1 = col1.empty()  # Placeholder for correct feedback
-placeholder2 = col2.empty()  # Placeholder for incorrect feedback
 
 with col1:
+    text_placeholder1 = st.empty()  # Placeholder for correct feedback text
+    audio_placeholder1 = st.empty()  # Placeholder for correct feedback audio
     if st.button("When the answer is correct"):
-        provide_feedback(feedback_correct, 'remaining_correct', placeholder1)
+        provide_feedback(feedback_correct, 'remaining_correct', text_placeholder1, audio_placeholder1)
     if 'remaining_correct' in st.session_state:
         if st.button("Next Correct"):
-            provide_feedback(feedback_correct, 'remaining_correct', placeholder1)
+            provide_feedback(feedback_correct, 'remaining_correct', text_placeholder1, audio_placeholder1)
 
 with col2:
+    text_placeholder2 = st.empty()  # Placeholder for incorrect feedback text
+    audio_placeholder2 = st.empty()  # Placeholder for incorrect feedback audio
     if st.button("When the answer is incorrect"):
-        provide_feedback(feedback_incorrect, 'remaining_incorrect', placeholder2)
+        provide_feedback(feedback_incorrect, 'remaining_incorrect', text_placeholder2, audio_placeholder2)
     if 'remaining_incorrect' in st.session_state:
         if st.button("Next Incorrect"):
-            provide_feedback(feedback_incorrect, 'remaining_incorrect', placeholder2)
+            provide_feedback(feedback_incorrect, 'remaining_incorrect', text_placeholder2, audio_placeholder2)
