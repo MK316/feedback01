@@ -75,7 +75,7 @@ def provide_feedback(feedback_list, session_key, text_placeholder, audio_placeho
         audio_placeholder.empty()  # Clear the audio placeholder
 
 # UI setup
-st.title("Giving Feedback: Audio Player")
+st.title("Giving Feedback: Audio Player 🎧")
 
 # Split into two columns for Correct and Incorrect Feedback
 col1, col2 = st.columns(2)
